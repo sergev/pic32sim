@@ -1,0 +1,13 @@
+#
+# Setup the environment for compiling and running Imperas simulator.
+#
+unset IMPERAS_VLNV
+unset IMPERASD_LICENSE_FILE
+unset MIPS_LICENSE_FILE
+unset LM_LICENSE_FILE
+export IMPERAS_HOME=/usr/local/Imperas.20140430
+export IMPERAS_RUNTIME=OVPsim
+export IMPERAS_ARCH=Linux32
+export IMPERAS_UNAME=Linux
+export IMPERAS_SHRSUF=so
+export LD_LIBRARY_PATH=$IMPERAS_HOME/bin/Linux32

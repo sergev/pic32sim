@@ -1,0 +1,258 @@
+Board 'Microchip Explorer16'.
+Magic opcodes enabled.
+Flash file 'boot-test.hex', 1660 bytes
+
+***** Start 'M4K' *****
+M4K : Write C0STAT       = 00400004
+M4K : Write C0SRSCTL     = 04000000
+M4K : Write C0PRID       = 00018765
+M4K : Write C0EBASE      = 80000000
+M4K : Write C0CONFIG     = a4200582
+M4K : Write C0CONFIG1    = 80000006
+M4K : Write C0CONFIG2    = 80000000
+M4K : Write C0CONFIG3    = 00000060
+M4K : Write C0DEBUG      = 02010000
+M4K : bfc00000 1fc00000 2: 40804800 MTC0 	$0, C0COUNT
+Info (MIPS32_EXCEPT) M4K: Count (Compare=0 Count=0 CauseDC=0) - schedule timer interrupt after 4294967295 (0xffffffff)
+M4K : bfc00004 1fc00004 2: 40116000 MFC0 	$17, C0STAT
+M4K : Write GPR[17]      = 00400004
+M4K : bfc00008 1fc00008 2: 7e3104c0 EXT  	$17, $17, 0x13, 0x1
+M4K : Write GPR[17]      = 00000000
+M4K : bfc0000c 1fc0000c 2: 12200009 BEQZ 	$17, 0xbfc00034
+M4K : bfc00010 1fc00010 2: 00000000 NOP  	
+M4K : bfc00034 1fc00034 2: 3c01dead LUI  	$1, 0xdead
+M4K : Write GPR[ 1]      = dead0000
+M4K : bfc00038 1fc00038 2: 3421beef ORI  	$1, $1, 0xbeef
+M4K : Write GPR[ 1]      = deadbeef
+M4K : bfc0003c 1fc0003c 2: 401d6002 MFC0 	$29, C0SRSCTL
+M4K : Write GPR[29]      = 04000000
+M4K : bfc00040 1fc00040 2: 7fbe1e80 EXT  	$30, $29, 0x1a, 0x4
+M4K : Write GPR[30]      = 00000001
+M4K : bfc00044 1fc00044 2: 7fdd4984 INS  	$29, $30, 0x6, 0x4
+M4K : Write GPR[29]      = 04000040
+M4K : bfc00048 1fc00048 2: 409d6002 MTC0 	$29, C0SRSCTL
+M4K : Write C0SRSCTL     = 04000040
+M4K : bfc0004c 1fc0004c 2: 41c10800 WRPGPR	$1, $1
+M4K : Write GPR[ 1]s[1]  = deadbeef
+M4K : bfc00050 1fc00050 2: 41c11000 WRPGPR	$2, $1
+M4K : Write GPR[ 2]s[1]  = deadbeef
+M4K : bfc00054 1fc00054 2: 41c11800 WRPGPR	$3, $1
+M4K : Write GPR[ 3]s[1]  = deadbeef
+M4K : bfc00058 1fc00058 2: 41c12000 WRPGPR	$4, $1
+M4K : Write GPR[ 4]s[1]  = deadbeef
+M4K : bfc0005c 1fc0005c 2: 41c12800 WRPGPR	$5, $1
+M4K : Write GPR[ 5]s[1]  = deadbeef
+M4K : bfc00060 1fc00060 2: 41c13000 WRPGPR	$6, $1
+M4K : Write GPR[ 6]s[1]  = deadbeef
+M4K : bfc00064 1fc00064 2: 41c13800 WRPGPR	$7, $1
+M4K : Write GPR[ 7]s[1]  = deadbeef
+M4K : bfc00068 1fc00068 2: 41c14000 WRPGPR	$8, $1
+M4K : Write GPR[ 8]s[1]  = deadbeef
+M4K : bfc0006c 1fc0006c 2: 41c14800 WRPGPR	$9, $1
+M4K : Write GPR[ 9]s[1]  = deadbeef
+M4K : bfc00070 1fc00070 2: 41c15000 WRPGPR	$10, $1
+M4K : Write GPR[10]s[1]  = deadbeef
+M4K : bfc00074 1fc00074 2: 41c15800 WRPGPR	$11, $1
+M4K : Write GPR[11]s[1]  = deadbeef
+M4K : bfc00078 1fc00078 2: 41c16000 WRPGPR	$12, $1
+M4K : Write GPR[12]s[1]  = deadbeef
+M4K : bfc0007c 1fc0007c 2: 41c16800 WRPGPR	$13, $1
+M4K : Write GPR[13]s[1]  = deadbeef
+M4K : bfc00080 1fc00080 2: 41c17000 WRPGPR	$14, $1
+M4K : Write GPR[14]s[1]  = deadbeef
+M4K : bfc00084 1fc00084 2: 41c17800 WRPGPR	$15, $1
+M4K : Write GPR[15]s[1]  = deadbeef
+M4K : bfc00088 1fc00088 2: 41c18000 WRPGPR	$16, $1
+M4K : Write GPR[16]s[1]  = deadbeef
+M4K : bfc0008c 1fc0008c 2: 41c18800 WRPGPR	$17, $1
+M4K : Write GPR[17]s[1]  = deadbeef
+M4K : bfc00090 1fc00090 2: 41c19000 WRPGPR	$18, $1
+M4K : Write GPR[18]s[1]  = deadbeef
+M4K : bfc00094 1fc00094 2: 41c19800 WRPGPR	$19, $1
+M4K : Write GPR[19]s[1]  = deadbeef
+M4K : bfc00098 1fc00098 2: 41c1a000 WRPGPR	$20, $1
+M4K : Write GPR[20]s[1]  = deadbeef
+M4K : bfc0009c 1fc0009c 2: 41c1a800 WRPGPR	$21, $1
+M4K : Write GPR[21]s[1]  = deadbeef
+M4K : bfc000a0 1fc000a0 2: 41c1b000 WRPGPR	$22, $1
+M4K : Write GPR[22]s[1]  = deadbeef
+M4K : bfc000a4 1fc000a4 2: 41c1b800 WRPGPR	$23, $1
+M4K : Write GPR[23]s[1]  = deadbeef
+M4K : bfc000a8 1fc000a8 2: 41c1c000 WRPGPR	$24, $1
+M4K : Write GPR[24]s[1]  = deadbeef
+M4K : bfc000ac 1fc000ac 2: 41c1c800 WRPGPR	$25, $1
+M4K : Write GPR[25]s[1]  = deadbeef
+M4K : bfc000b0 1fc000b0 2: 41c1d000 WRPGPR	$26, $1
+M4K : Write GPR[26]s[1]  = deadbeef
+M4K : bfc000b4 1fc000b4 2: 41c1d800 WRPGPR	$27, $1
+M4K : Write GPR[27]s[1]  = deadbeef
+M4K : bfc000b8 1fc000b8 2: 41c1e000 WRPGPR	$28, $1
+M4K : Write GPR[28]s[1]  = deadbeef
+M4K : bfc000bc 1fc000bc 2: 13c00005 BEQZ 	$30, 0xbfc000d4
+M4K : bfc000c0 1fc000c0 2: 41c1e800 WRPGPR	$29, $1
+M4K : Write GPR[29]s[1]  = deadbeef
+M4K : bfc000c4 1fc000c4 2: 41c1f000 WRPGPR	$30, $1
+M4K : Write GPR[30]s[1]  = deadbeef
+M4K : bfc000c8 1fc000c8 2: 41c1f800 WRPGPR	$31, $1
+M4K : Write GPR[31]s[1]  = deadbeef
+M4K : bfc000cc 1fc000cc 2: 1000ffdd B    	0xbfc00044
+M4K : bfc000d0 1fc000d0 2: 23deffff ADDI 	$30, $30, -1
+M4K : Write GPR[30]      = 00000000
+M4K : bfc00044 1fc00044 2: 7fdd4984 INS  	$29, $30, 0x6, 0x4
+M4K : Write GPR[29]      = 04000000
+M4K : bfc00048 1fc00048 2: 409d6002 MTC0 	$29, C0SRSCTL
+M4K : Write C0SRSCTL     = 04000000
+M4K : bfc0004c 1fc0004c 2: 41c10800 WRPGPR	$1, $1
+M4K : bfc00050 1fc00050 2: 41c11000 WRPGPR	$2, $1
+M4K : Write GPR[ 2]      = deadbeef
+M4K : bfc00054 1fc00054 2: 41c11800 WRPGPR	$3, $1
+M4K : Write GPR[ 3]      = deadbeef
+M4K : bfc00058 1fc00058 2: 41c12000 WRPGPR	$4, $1
+M4K : Write GPR[ 4]      = deadbeef
+M4K : bfc0005c 1fc0005c 2: 41c12800 WRPGPR	$5, $1
+M4K : Write GPR[ 5]      = deadbeef
+M4K : bfc00060 1fc00060 2: 41c13000 WRPGPR	$6, $1
+M4K : Write GPR[ 6]      = deadbeef
+M4K : bfc00064 1fc00064 2: 41c13800 WRPGPR	$7, $1
+M4K : Write GPR[ 7]      = deadbeef
+M4K : bfc00068 1fc00068 2: 41c14000 WRPGPR	$8, $1
+M4K : Write GPR[ 8]      = deadbeef
+M4K : bfc0006c 1fc0006c 2: 41c14800 WRPGPR	$9, $1
+M4K : Write GPR[ 9]      = deadbeef
+M4K : bfc00070 1fc00070 2: 41c15000 WRPGPR	$10, $1
+M4K : Write GPR[10]      = deadbeef
+M4K : bfc00074 1fc00074 2: 41c15800 WRPGPR	$11, $1
+M4K : Write GPR[11]      = deadbeef
+M4K : bfc00078 1fc00078 2: 41c16000 WRPGPR	$12, $1
+M4K : Write GPR[12]      = deadbeef
+M4K : bfc0007c 1fc0007c 2: 41c16800 WRPGPR	$13, $1
+M4K : Write GPR[13]      = deadbeef
+M4K : bfc00080 1fc00080 2: 41c17000 WRPGPR	$14, $1
+M4K : Write GPR[14]      = deadbeef
+M4K : bfc00084 1fc00084 2: 41c17800 WRPGPR	$15, $1
+M4K : Write GPR[15]      = deadbeef
+M4K : bfc00088 1fc00088 2: 41c18000 WRPGPR	$16, $1
+M4K : Write GPR[16]      = deadbeef
+M4K : bfc0008c 1fc0008c 2: 41c18800 WRPGPR	$17, $1
+M4K : Write GPR[17]      = deadbeef
+M4K : bfc00090 1fc00090 2: 41c19000 WRPGPR	$18, $1
+M4K : Write GPR[18]      = deadbeef
+M4K : bfc00094 1fc00094 2: 41c19800 WRPGPR	$19, $1
+M4K : Write GPR[19]      = deadbeef
+M4K : bfc00098 1fc00098 2: 41c1a000 WRPGPR	$20, $1
+M4K : Write GPR[20]      = deadbeef
+M4K : bfc0009c 1fc0009c 2: 41c1a800 WRPGPR	$21, $1
+M4K : Write GPR[21]      = deadbeef
+M4K : bfc000a0 1fc000a0 2: 41c1b000 WRPGPR	$22, $1
+M4K : Write GPR[22]      = deadbeef
+M4K : bfc000a4 1fc000a4 2: 41c1b800 WRPGPR	$23, $1
+M4K : Write GPR[23]      = deadbeef
+M4K : bfc000a8 1fc000a8 2: 41c1c000 WRPGPR	$24, $1
+M4K : Write GPR[24]      = deadbeef
+M4K : bfc000ac 1fc000ac 2: 41c1c800 WRPGPR	$25, $1
+M4K : Write GPR[25]      = deadbeef
+M4K : bfc000b0 1fc000b0 2: 41c1d000 WRPGPR	$26, $1
+M4K : Write GPR[26]      = deadbeef
+M4K : bfc000b4 1fc000b4 2: 41c1d800 WRPGPR	$27, $1
+M4K : Write GPR[27]      = deadbeef
+M4K : bfc000b8 1fc000b8 2: 41c1e000 WRPGPR	$28, $1
+M4K : Write GPR[28]      = deadbeef
+M4K : bfc000bc 1fc000bc 2: 13c00005 BEQZ 	$30, 0xbfc000d4
+M4K : bfc000c0 1fc000c0 2: 41c1e800 WRPGPR	$29, $1
+M4K : Write GPR[29]      = deadbeef
+M4K : bfc000d4 1fc000d4 2: 3c030040 LUI  	$3, 0x40
+M4K : Write GPR[ 3]      = 00400000
+M4K : bfc000d8 1fc000d8 2: 34630404 ORI  	$3, $3, 0x404
+M4K : Write GPR[ 3]      = 00400404
+M4K : bfc000dc 1fc000dc 2: 40836000 MTC0 	$3, C0STAT
+M4K : Write C0STAT       = 00400404
+M4K : bfc000e0 1fc000e0 2: 40028001 MFC0 	$2, C0CONFIG1
+M4K : Write GPR[ 2]      = 80000006
+M4K : bfc000e4 1fc000e4 2: 7c4300c0 EXT  	$3, $2, 0x3, 0x1
+M4K : Write GPR[ 3]      = 00000000
+M4K : bfc000e8 1fc000e8 2: 1060001f BEQZ 	$3, 0xbfc00168
+M4K : bfc000ec 1fc000ec 2: 24030007 LI   	$3, 7
+M4K : Write GPR[ 3]      = 00000007
+M4K : bfc00168 1fc00168 2: 40806800 MTC0 	$0, C0CAUS
+M4K : bfc0016c 1fc0016c 2: 100000e4 B    	0xbfc00500
+M4K : bfc00170 1fc00170 2: 40805800 MTC0 	$0, C0COMP
+Info (MIPS32_EXCEPT) M4K: Compare modified (Compare=0 Count=86 CauseDC=0) - schedule timer interrupt after 4294967209 (0xffffffa9)
+M4K : bfc00500 1fc00500 2: 40038000 MFC0 	$3, C0CONFIG
+M4K : Write GPR[ 3]      = a4200582
+M4K : bfc00504 1fc00504 2: 7c6311c0 EXT  	$3, $3, 0x7, 0x3
+M4K : Write GPR[ 3]      = 00000003
+M4K : bfc00508 1fc00508 2: 24070001 LI   	$7, 1
+M4K : Write GPR[ 7]      = 00000001
+M4K : bfc0050c 1fc0050c 2: 1467000e BNE  	$3, $7, 0xbfc00548
+M4K : bfc00510 1fc00510 2: 40028001 MFC0 	$2, C0CONFIG1
+M4K : bfc00548 1fc00548 2: 40028001 MFC0 	$2, C0CONFIG1
+M4K : bfc0054c 1fc0054c 2: 7c4314c0 EXT  	$3, $2, 0x13, 0x3
+M4K : Write GPR[ 3]      = 00000000
+M4K : bfc00550 1fc00550 2: 10600013 BEQZ 	$3, 0xbfc005a0
+M4K : bfc00554 1fc00554 2: 00000000 NOP  	
+M4K : bfc005a0 1fc005a0 2: 3c069fc0 LUI  	$6, 0x9fc0
+M4K : Write GPR[ 6]      = 9fc00000
+M4K : bfc005a4 1fc005a4 2: 24c605b8 ADDIU	$6, $6, 1464
+M4K : Write GPR[ 6]      = 9fc005b8
+M4K : bfc005a8 1fc005a8 2: 2405000f LI   	$5, 15
+M4K : Write GPR[ 5]      = 0000000f
+M4K : bfc005ac 1fc005ac 2: 7ca6ef44 INS  	$6, $5, 0x1d, 0x1
+M4K : Write GPR[ 6]      = bfc005b8
+M4K : bfc005b0 1fc005b0 2: 00c00008 JR   	$6
+M4K : bfc005b4 1fc005b4 2: 00000000 NOP  	
+M4K : bfc005b8 1fc005b8 2: 40028000 MFC0 	$2, C0CONFIG
+M4K : Write GPR[ 2]      = a4200582
+M4K : bfc005bc 1fc005bc 2: 24030003 LI   	$3, 3
+M4K : Write GPR[ 3]      = 00000003
+M4K : bfc005c0 1fc005c0 2: 7c621004 INS  	$2, $3, 0x0, 0x3
+M4K : Write GPR[ 2]      = a4200583
+M4K : bfc005c4 1fc005c4 2: 40828000 MTC0 	$2, C0CONFIG
+M4K : Write C0CONFIG     = a4200583
+M4K : bfc005c8 1fc005c8 2: 3c069fc0 LUI  	$6, 0x9fc0
+M4K : Write GPR[ 6]      = 9fc00000
+M4K : bfc005cc 1fc005cc 2: 24c605d8 ADDIU	$6, $6, 1496
+M4K : Write GPR[ 6]      = 9fc005d8
+M4K : bfc005d0 1fc005d0 2: 00c00008 JR   	$6
+M4K : bfc005d4 1fc005d4 2: 000000c0 EHB  	
+M4K : 9fc005d8 1fc005d8 3: 40028001 MFC0 	$2, C0CONFIG1
+M4K : Write GPR[ 2]      = 80000006
+M4K : 9fc005dc 1fc005dc 3: 7c431280 EXT  	$3, $2, 0xa, 0x3
+M4K : Write GPR[ 3]      = 00000000
+M4K : 9fc005e0 1fc005e0 3: 10600014 BEQZ 	$3, 0x9fc00634
+M4K : 9fc005e4 1fc005e4 3: 00000000 NOP  	
+M4K : 9fc00634 1fc00634 3: 3c1d7ff8 LUI  	$29, 0x7ff8
+M4K : Write GPR[29]      = 7ff80000
+M4K : 9fc00638 1fc00638 3: 27bdfff0 ADDIU	$29, $29, -16
+M4K : Write GPR[29]      = 7ff7fff0
+M4K : 9fc0063c 1fc0063c 3: 3c1c8000 LUI  	$28, 0x8000
+M4K : Write GPR[28]      = 80000000
+M4K : 9fc00640 1fc00640 3: 279c0000 ADDIU	$28, $28, 0
+M4K : 9fc00644 1fc00644 3: 3c1f9fc0 LUI  	$31, 0x9fc0
+M4K : Write GPR[31]      = 9fc00000
+M4K : 9fc00648 1fc00648 3: 27ff065c ADDIU	$31, $31, 1628
+M4K : Write GPR[31]      = 9fc0065c
+M4K : 9fc0064c 1fc0064c 3: 3c029d00 LUI  	$2, 0x9d00
+M4K : Write GPR[ 2]      = 9d000000
+M4K : 9fc00650 1fc00650 3: 24420000 ADDIU	$2, $2, 0
+M4K : 9fc00654 1fc00654 3: 4082f000 MTC0 	$2, C0ErrorEPC
+M4K : Write C0ErrorEPC   = 9d000000
+M4K : 9fc00658 1fc00658 3: 42000018 ERET 	
+M4K : Write C0STAT       = 00400400
+M4K : 9d000000 1d000000 3: 40024800 MFC0 	$2, C0COUNT
+M4K : Write GPR[ 2]      = 0000007c
+M4K : 9d000004 1d000004 3: af820000 SW   	$2, 0($28)
+M4K : Memory Write [80000000 00000000 3] = 0000007c
+M4K : 9d000008 1d000008 3: 03e00008 JR   	$31
+M4K : 9d00000c 1d00000c 3: 00001021 MOVE 	$2, $0
+M4K : Write GPR[ 2]      = 00000000
+M4K : 9fc0065c 1fc0065c 3: 1000ffff B    	0x9fc0065c
+M4K : 9fc00660 1fc00660 3: 2c00abc2 SLTIU	$0, $0, -21566
+Info (MIPS32_AVP) AVP test PASS
+***** Stop *****
+
+OVPsim finished: Tue May 27 00:55:29 2014
+
+
+OVPsim (32-Bit) v20140430.0 Open Virtual Platform simulator from www.OVPworld.org.
+Visit www.IMPERAS.com for multicore debug, verification and analysis solutions.
+
