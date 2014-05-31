@@ -1,5 +1,5 @@
 /*
- * SPI ports.
+ * UART ports.
  *
  * Copyright (C) 2014 Serge Vakulenko <serge@vak.ru>
  *
@@ -152,9 +152,9 @@ int uart_active()
     int unit;
 
     for (unit=0; unit<NUM_UART; unit++) {
-    	if (uart_oactive[unit])	
+    	if (uart_oactive[unit])
 	    return 1;
-    	if (vtty_is_char_avail (unit)) 
+    	if (vtty_is_char_avail (unit))
 	    return 1;
     }
     return 0;

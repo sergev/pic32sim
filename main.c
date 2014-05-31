@@ -57,6 +57,7 @@ static void usage()
     icmPrintf("    -v           verbose mode\n");
     icmPrintf("    -t filename  trace CPU instructions and registers\n");
     icmPrintf("    -d sd0.img   SD card image (repeat for sd1)\n");
+    icmPrintf("    -g           wait for GDB connection\n");
     icmPrintf("    -m           enable magic opcodes\n");
     icmPrintf("    -c           enable cache\n");
     exit(-1);
@@ -217,12 +218,13 @@ int main(int argc, char **argv)
     Uns32 sim_attrs      = ICM_STOP_ON_CTRLC;
     Uns32 model_flags    = 0;
     Uns32 magic_opcodes  = 0;
+    char *remote_debug   = 0;
     char *trace_filename = 0;
     const char *sd0_file = 0;
     const char *sd1_file = 0;
 
     for (;;) {
-        switch (getopt (argc, argv, "vmct:d:")) {
+        switch (getopt (argc, argv, "vmcgt:d:")) {
         case EOF:
             break;
         case 'v':
@@ -233,6 +235,9 @@ int main(int argc, char **argv)
             continue;
         case 'c':
             cache_enable++;
+            continue;
+        case 'g':
+            remote_debug = "rsp";
             continue;
         case 't':
             trace_flag++;
@@ -263,7 +268,7 @@ int main(int argc, char **argv)
     //
     // Initialize CpuManager
     //
-    icmInit(sim_attrs, NULL, 0);
+    icmInit(sim_attrs, remote_debug, 0);
     atexit(quit);
 
     // Use ^\ to kill the simulation.
@@ -364,6 +369,11 @@ int main(int argc, char **argv)
         user_attrs,                   // user attribute list
         0,                            // semihosting file name
         0);                           // semihosting attribute symbol
+    if (remote_debug) {
+        // Mark this processor for debug
+        icmDebugThisProcessor(processor);
+    }
+
     icmBusP bus = icmNewBus("bus", 32);
     icmConnectProcessorBusses(processor, bus, bus);
 
