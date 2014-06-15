@@ -85,16 +85,22 @@ static void print_user_attribute (const char *owner, const char *name,
 //
 // Callback for reading peripheral registers.
 //
-static void mem_read (icmProcessorP proc, Addr address, Uns32 bytes,
-    void *value, void *user_data, Addr VA, Bool isFetch)
+static void mem_read (icmProcessorP proc, Addr paddr, Uns32 bytes,
+    void *value, void *user_data, Addr vaddr, Bool isFetch)
 {
-    Uns32 offset = address & 0xfffff;
+    Uns32 offset = paddr & 0xfffff;
     const char *name = "???";
     Uns32 data;
 
+    if (vaddr < IO_MEM_START + 0xa0000000U) {
+        icmPrintf("--- I/O Read  %08x: incorrect virtual address %08x\n",
+            (Uns32) paddr, (Uns32) vaddr);
+        icmExit(proc);
+    }
+
     switch (bytes) {
     case 1:
-        data = io_read32 (address, (Uns32*) (user_data + (offset & ~3)), &name);
+        data = io_read32 (paddr, (Uns32*) (user_data + (offset & ~3)), &name);
         if ((offset &= 3) != 0) {
             // Unaligned read.
             data >>= offset * 8;
@@ -105,7 +111,7 @@ static void mem_read (icmProcessorP proc, Addr address, Uns32 bytes,
         *(Uns8*) value = data;
         break;
     case 2:
-        data = io_read32 (address, (Uns32*) (user_data + (offset & ~1)), &name);
+        data = io_read32 (paddr, (Uns32*) (user_data + (offset & ~1)), &name);
         if (offset & 1) {
             // Unaligned read.
             data >>= 16;
@@ -116,7 +122,7 @@ static void mem_read (icmProcessorP proc, Addr address, Uns32 bytes,
         *(Uns16*) value = data;
         break;
     case 4:
-        data = io_read32 (address, (Uns32*) (user_data + offset), &name);
+        data = io_read32 (paddr, (Uns32*) (user_data + offset), &name);
         if (trace_flag) {
             icmPrintf("--- I/O Read  %08x from %s\n", data, name);
         }
@@ -124,7 +130,7 @@ static void mem_read (icmProcessorP proc, Addr address, Uns32 bytes,
         break;
     default:
         icmPrintf("--- I/O Read  %08x: incorrect size %u bytes\n",
-            (Uns32) address, bytes);
+            (Uns32) paddr, bytes);
         icmExit(proc);
     }
 }
@@ -132,19 +138,25 @@ static void mem_read (icmProcessorP proc, Addr address, Uns32 bytes,
 //
 // Callback for writing peripheral registers.
 //
-static void mem_write (icmProcessorP proc, Addr address, Uns32 bytes,
-    const void *value, void *user_data, Addr VA)
+static void mem_write (icmProcessorP proc, Addr paddr, Uns32 bytes,
+    const void *value, void *user_data, Addr vaddr)
 {
     Uns32 data;
     const char *name = "???";
 
+    if (vaddr < IO_MEM_START + 0xa0000000U) {
+        icmPrintf("--- I/O Read  %08x: incorrect virtual address %08x\n",
+            (Uns32) paddr, (Uns32) vaddr);
+        icmExit(proc);
+    }
+
     if (bytes != 4) {
         icmPrintf("--- I/O Write %08x: incorrect size %u bytes\n",
-            (Uns32) address, bytes);
+            (Uns32) paddr, bytes);
         icmExit(proc);
     }
     data = *(Uns32*) value;
-    io_write32 (address, (Uns32*) (user_data + (address & 0xffffc)),
+    io_write32 (paddr, (Uns32*) (user_data + (paddr & 0xffffc)),
         data, &name);
     if (trace_flag && name != 0) {
         icmPrintf("--- I/O Write %08x to %s \n", data, name);
