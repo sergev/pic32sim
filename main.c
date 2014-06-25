@@ -476,7 +476,28 @@ int main(int argc, char **argv)
     //
     // Generic reset of all peripherals.
     //
-    io_init (bootmem);
+#if defined PIC32MX7
+    // MX7: use data from Max32 board.
+    io_init (bootmem,
+        0xffffff7f, 0x5bfd6aff,                 // DEVCFG0, DEVCFG1,
+        0xd979f8f9, 0xffff0722,                 // DEVCFG2, DEVCFG3 values
+        0x04307053,                             // DEVID: 795F512L
+        0x01453320);                            // OSCCON: external oscillator 8MHz
+#elif defined WIFIRE
+    // WiFire board.
+    io_init (bootmem,
+        0xfffffff7, 0x7f743cb9,                 // DEVCFG0, DEVCFG1,
+        0xfff9b11a, 0xbeffffff,                 // DEVCFG2, DEVCFG3 values
+        0x4510e053,                             // DEVID: MZ2048ECG100 rev A4
+        0x00001120);                            // OSCCON: external oscillator 24MHz
+#else
+    // Generic MZ: use data from Explorer16 board.
+    io_init (bootmem,
+        0x7fffffdb, 0x0000fc81,                 // DEVCFG0, DEVCFG1,
+        0x3ff8b11a, 0x86ffffff,                 // DEVCFG2, DEVCFG3 values
+        0x35113053,                             // DEVID: MZ2048ECH100 rev A3
+        0x00001120);                            // OSCCON: external oscillator 24MHz
+#endif
 
     if (trace_flag) {
         icmPrintf("Board '%s'.\n", board);

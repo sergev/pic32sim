@@ -913,10 +913,8 @@ void io_reset()
     /*
      * System controller.
      */
-    VALUE(OSCCON) = 0x01453320;         // from ubw32 board
     VALUE(OSCTUN) = 0;
     VALUE(DDPCON) = 0;
-    VALUE(DEVID)  = 0x04307053;         // 795F512L
     VALUE(SYSKEY) = 0;
     VALUE(RCON)   = 0;
     VALUE(RSWRST) = 0;
@@ -973,15 +971,17 @@ void io_reset()
     spi_reset();
 }
 
-void io_init (void *bootp)
+void io_init (void *bootp, unsigned devcfg0, unsigned devcfg1,
+    unsigned devcfg2, unsigned devcfg3, unsigned devid, unsigned osccon)
 {
     bootmem = bootp;
+    VALUE(DEVID)  = devid;
+    VALUE(OSCCON) = osccon;
 
-    // Preset DEVCFG data, from Max32 bootloader.
-    BOOTMEM(DEVCFG3) = 0xffff0722;
-    BOOTMEM(DEVCFG2) = 0xd979f8f9;
-    BOOTMEM(DEVCFG1) = 0x5bfd6aff;
-    BOOTMEM(DEVCFG0) = 0xffffff7f;
+    BOOTMEM(DEVCFG3) = devcfg3;
+    BOOTMEM(DEVCFG2) = devcfg2;
+    BOOTMEM(DEVCFG1) = devcfg1;
+    BOOTMEM(DEVCFG0) = devcfg0;
 
     io_reset();
     sdcard_reset();

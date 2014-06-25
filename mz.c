@@ -224,6 +224,7 @@ unsigned io_read32 (unsigned address, unsigned *bufp, const char **namep)
     STORAGE (RSWRST); break;	// Software Reset
     STORAGE (OSCCON); break;	// Oscillator Control
     STORAGE (OSCTUN); break;	// Oscillator Tuning
+    STORAGE (SPLLCON); break;	// System PLL Control
     STORAGE (PB1DIV); break;	// Peripheral bus 1 divisor
     STORAGE (PB2DIV); break;	// Peripheral bus 2 divisor
     STORAGE (PB3DIV); break;	// Peripheral bus 3 divisor
@@ -908,6 +909,7 @@ irq:    update_irq_status();
 	break;
     STORAGE (OSCCON); break;	// Oscillator Control
     STORAGE (OSCTUN); break;	// Oscillator Tuning
+    STORAGE (SPLLCON); break;	// System PLL Control
     STORAGE (PB1DIV); break;	// Peripheral bus 1 divisor
     STORAGE (PB2DIV); break;	// Peripheral bus 2 divisor
     STORAGE (PB3DIV); break;	// Peripheral bus 3 divisor
@@ -1300,14 +1302,13 @@ void io_reset()
     /*
      * System controller.
      */
-    syskey_unlock  = 0;
+    syskey_unlock = 0;
     VALUE(CFGCON) = PIC32_CFGCON_ECC_DISWR | PIC32_CFGCON_TDOEN;
-    VALUE(DEVID)  = 0x04307053;         // 795F512L
     VALUE(SYSKEY) = 0;
     VALUE(RCON)   = 0;
     VALUE(RSWRST) = 0;
-    VALUE(OSCCON) = 0x01453320;         // from ubw32 board
     VALUE(OSCTUN) = 0;
+    VALUE(SPLLCON)= 0x01310201;
     VALUE(PB1DIV) = 0x00008801;
     VALUE(PB2DIV) = 0x00008801;
     VALUE(PB3DIV) = 0x00008801;
@@ -1405,15 +1406,17 @@ void io_reset()
     spi_reset();
 }
 
-void io_init (void *bootp)
+void io_init (void *bootp, unsigned devcfg0, unsigned devcfg1,
+    unsigned devcfg2, unsigned devcfg3, unsigned devid, unsigned osccon)
 {
     bootmem = bootp;
+    VALUE(DEVID)  = devid;
+    VALUE(OSCCON) = osccon;
 
-    // Preset DEVCFG data, from Max32 bootloader.
-    BOOTMEM(DEVCFG3) = 0xffff0722;
-    BOOTMEM(DEVCFG2) = 0xd979f8f9;
-    BOOTMEM(DEVCFG1) = 0x5bfd6aff;
-    BOOTMEM(DEVCFG0) = 0xffffff7f;
+    BOOTMEM(DEVCFG3) = devcfg3;
+    BOOTMEM(DEVCFG2) = devcfg2;
+    BOOTMEM(DEVCFG1) = devcfg1;
+    BOOTMEM(DEVCFG0) = devcfg0;
 
     io_reset();
     sdcard_reset();
