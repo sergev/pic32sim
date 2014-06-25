@@ -92,7 +92,7 @@ static void mem_read (icmProcessorP proc, Addr paddr, Uns32 bytes,
     const char *name = "???";
     Uns32 data;
 
-    if (vaddr < IO_MEM_START + 0xa0000000U) {
+    if (vaddr >= 0x80000000 && vaddr < IO_MEM_START + 0xa0000000U) {
         icmPrintf("--- I/O Read  %08x: incorrect virtual address %08x\n",
             (Uns32) paddr, (Uns32) vaddr);
         icmExit(proc);
@@ -144,7 +144,7 @@ static void mem_write (icmProcessorP proc, Addr paddr, Uns32 bytes,
     Uns32 data;
     const char *name = "???";
 
-    if (vaddr < IO_MEM_START + 0xa0000000U) {
+    if (vaddr >= 0x80000000 && vaddr < IO_MEM_START + 0xa0000000U) {
         icmPrintf("--- I/O Read  %08x: incorrect virtual address %08x\n",
             (Uns32) paddr, (Uns32) vaddr);
         icmExit(proc);
