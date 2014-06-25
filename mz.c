@@ -897,7 +897,7 @@ irq:    update_irq_status();
 	    syskey_unlock = 0;
 	break;
     STORAGE (RCON); break;	// Reset Control
-    STORAGE (RSWRST);		// Software Reset
+    WRITEOP (RSWRST);		// Software Reset
 	if (syskey_unlock == 2 && (VALUE(RSWRST) & 1)) {
             /* Reset CPU. */
             soft_reset();

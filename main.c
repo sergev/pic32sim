@@ -56,6 +56,7 @@ static void usage()
     icmPrintf("Options:\n");
     icmPrintf("    -v           verbose mode\n");
     icmPrintf("    -t filename  trace CPU instructions and registers\n");
+    icmPrintf("    -l number    limit simulation to this number of instructions\n");
     icmPrintf("    -d sd0.img   SD card image (repeat for sd1)\n");
     icmPrintf("    -g           wait for GDB connection\n");
     icmPrintf("    -m           enable magic opcodes\n");
@@ -230,13 +231,14 @@ int main(int argc, char **argv)
     Uns32 sim_attrs      = ICM_STOP_ON_CTRLC;
     Uns32 model_flags    = 0;
     Uns32 magic_opcodes  = 0;
+    Uns32 limit_count    = 0;
     char *remote_debug   = 0;
     char *trace_filename = 0;
     const char *sd0_file = 0;
     const char *sd1_file = 0;
 
     for (;;) {
-        switch (getopt (argc, argv, "vmcgt:d:")) {
+        switch (getopt (argc, argv, "vmcgt:d:l:")) {
         case EOF:
             break;
         case 'v':
@@ -264,6 +266,9 @@ int main(int argc, char **argv)
                 icmPrintf("Too many -d options: %s", optarg);
                 return -1;
             }
+            continue;
+        case 'l':
+            limit_count = strtoul(optarg, 0, 0);
             continue;
         default:
             usage ();
@@ -500,11 +505,20 @@ int main(int argc, char **argv)
 #endif
 
     if (trace_flag) {
-        icmPrintf("Board '%s'.\n", board);
+        icmPrintf("Board: '%s'\n", board);
         if (cache_enable)
-            icmPrintf("Cache enabled.\n");
+            icmPrintf("Cache: enabled\n");
         if (magic_opcodes)
-            icmPrintf("Magic opcodes enabled.\n");
+            icmPrintf("Magic opcodes: enabled\n");
+    }
+
+    // Limit the simulation to a given number of instructions.
+    if (limit_count > 0) {
+        icmPrintf("Limit: %u instructions\n", limit_count);
+        if (! icmSetSimulationStopTime ((double) limit_count / 1e8)) {
+            fprintf (stderr, "Failed to set simulation stop time.\n");
+            return -1;
+        }
     }
 
     //
