@@ -226,7 +226,7 @@ int main(int argc, char **argv)
     // Parse command line arguments.
     // Setup the configuration attributes for the simulator
     //
-    Uns32 icm_attrs      = 0;
+    Uns32 icm_attrs      = ICM_ATTR_SIMEX;
     Uns32 sim_attrs      = ICM_STOP_ON_CTRLC;
     Uns32 model_flags    = 0;
     Uns32 magic_opcodes  = 0;
