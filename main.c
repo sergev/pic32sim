@@ -231,7 +231,7 @@ int main(int argc, char **argv)
     Uns32 sim_attrs      = ICM_STOP_ON_CTRLC;
     Uns32 model_flags    = 0;
     Uns32 magic_opcodes  = 0;
-    Uns32 limit_count    = 0;
+    Int64 limit_count    = 0;
     char *remote_debug   = 0;
     char *trace_filename = 0;
     const char *sd0_file = 0;
@@ -268,7 +268,7 @@ int main(int argc, char **argv)
             }
             continue;
         case 'l':
-            limit_count = strtoul(optarg, 0, 0);
+            limit_count = strtoull(optarg, 0, 0);
             continue;
         default:
             usage ();
@@ -514,11 +514,7 @@ int main(int argc, char **argv)
 
     // Limit the simulation to a given number of instructions.
     if (limit_count > 0) {
-        icmPrintf("Limit: %u instructions\n", limit_count);
-        if (! icmSetSimulationStopTime ((double) limit_count / 1e8)) {
-            fprintf (stderr, "Failed to set simulation stop time.\n");
-            return -1;
-        }
+        icmPrintf("Limit: %llu instructions\n", (unsigned long long)limit_count);
     }
 
     //
@@ -545,9 +541,10 @@ int main(int argc, char **argv)
 
     // Run the processor one instruction at a time until finished
     icmStopReason stop_reason;
+    Uns32 chunk = 100;
     do {
         // simulate fixed number of instructions
-        stop_reason = icmSimulate(processor, 100);
+        stop_reason = icmSimulate(processor, chunk);
 	if (stop_reason == ICM_SR_HALT) {
 	    /* Suspended on WAIT instructon. */
 	    stop_reason = ICM_SR_SCHED;
@@ -558,6 +555,14 @@ int main(int argc, char **argv)
 
 	// poll uarts
 	uart_poll();
+
+        if (limit_count > 0) {
+            limit_count -= chunk;
+            if (limit_count <= 0) {
+                icmPrintf("\n***** Limit reached *****\n");
+                break;
+            }
+        }
     } while (stop_reason == ICM_SR_SCHED);
 
     //
