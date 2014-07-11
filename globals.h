@@ -57,6 +57,7 @@ extern uint32_t iomem[];        // image of I/O area
 
 extern char *progname;          // base name of current program
 extern int trace_flag;          // trace enable
+extern int stop_on_reset;       // terminate simulation on software reset
 
 int load_file(void *progmem, void *bootmem, const char *filename);
 

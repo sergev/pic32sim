@@ -221,7 +221,11 @@ unsigned io_read32 (unsigned address, unsigned *bufp, const char **namep)
     STORAGE (DEVID); break;	// Device Identifier
     STORAGE (SYSKEY); break;	// System Key
     STORAGE (RCON); break;	// Reset Control
-    STORAGE (RSWRST); break;	// Software Reset
+    STORAGE (RSWRST);           // Software Reset
+        if ((VALUE(RSWRST) & 1) && stop_on_reset) {
+            exit(0);
+        }
+        break;
     STORAGE (OSCCON); break;	// Oscillator Control
     STORAGE (OSCTUN); break;	// Oscillator Tuning
     STORAGE (SPLLCON); break;	// System PLL Control
