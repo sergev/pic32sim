@@ -1,15 +1,16 @@
+Warning (ICM_DEPR) icmInit() has been deprecated, please use icmInitPlatform()
 
 
-OVPsim (32-Bit) v20140430.0 Open Virtual Platform simulator from www.OVPworld.org.
+OVPsim (32-Bit) v20140731.0 Open Virtual Platform simulator from www.OVPworld.org.
 Copyright (c) 2005-2014 Imperas Software Ltd.  Contains Imperas Proprietary Information.
 Licensed Software, All Rights Reserved.
 Visit www.IMPERAS.com for multicore debug, verification and analysis solutions.
 
-OVPsim started: Sun Jun 15 16:06:28 2014
+OVPsim started: Wed Oct  8 12:43:58 2014
 
 
-Flash file 'boot.hex', 6916 bytes
-Flash file 'uart.hex', 5352 bytes
+Load file: 'boot.hex', 6916 bytes
+Load file: 'uart.hex', 5352 bytes
 
 ***** Start 'microAptivP' *****
 -
@@ -44,9 +45,9 @@ PerfCtl1= 00000000
 Info (MIPS32_AVP) AVP test PASS
 ***** Stop *****
 
-OVPsim finished: Sun Jun 15 16:06:28 2014
+OVPsim finished: Wed Oct  8 12:43:58 2014
 
 
-OVPsim (32-Bit) v20140430.0 Open Virtual Platform simulator from www.OVPworld.org.
+OVPsim (32-Bit) v20140731.0 Open Virtual Platform simulator from www.OVPworld.org.
 Visit www.IMPERAS.com for multicore debug, verification and analysis solutions.
 

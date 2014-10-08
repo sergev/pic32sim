@@ -10,16 +10,16 @@ How to build and run
  1) Register at ovpworld.org.
     Link: http://www.ovpworld.org/forum/profile.php?mode=register
 
- 2) Download OVPsim simulator package for Linux, release 20140430.0:
-    http://www.ovpworld.org/dlp/?action=dl&dl_id=17462&site=dlp.OVPworld.org
+ 2) Download OVPsim simulator package for Linux, release 20140731.0:
+    http://www.ovpworld.org/dlp/?action=dl&dl_id=17886&site=dlp.OVPworld.org
 
     In case you use different relase of OVPsim, you will need to modify
     file imperas.environ appropriately.
 
  3) Unpack the downloaded package:
-    OVPsim.20140430.0.Linux32.exe
+    OVPsim.20140731.0.Linux32.exe
 
-    Install the unpacked directory as: /usr/local/Imperas.20140430
+    Install the unpacked directory as: /usr/local/Imperas.20140731
     You can install it to some other place, and modify file
     imperas.environ to use a new path.
 

@@ -60,6 +60,7 @@ static void usage()
     icmPrintf("    -l number    limit simulation to this number of instructions\n");
     icmPrintf("    -d sd0.img   SD card image (repeat for sd1)\n");
     icmPrintf("    -g           wait for GDB connection\n");
+    icmPrintf("    -m           enable magic opcodes\n");
     icmPrintf("    -s           stop on software reset\n");
     icmPrintf("    -c           enable cache\n");
     exit(-1);
@@ -231,6 +232,7 @@ int main(int argc, char **argv)
     Uns32 icm_attrs      = ICM_ATTR_SIMEX;
     Uns32 sim_attrs      = ICM_STOP_ON_CTRLC;
     Uns32 model_flags    = 0;
+    Uns32 magic_opcodes  = 0;
     Int64 limit_count    = 0;
     char *remote_debug   = 0;
     char *trace_filename = 0;
@@ -238,11 +240,14 @@ int main(int argc, char **argv)
     const char *sd1_file = 0;
 
     for (;;) {
-        switch (getopt (argc, argv, "vscgt:d:l:")) {
+        switch (getopt (argc, argv, "vmscgt:d:l:")) {
         case EOF:
             break;
         case 'v':
             sim_attrs |= ICM_VERBOSE;
+            continue;
+        case 'm':
+            magic_opcodes++;
             continue;
         case 's':
             stop_on_reset++;
@@ -361,6 +366,10 @@ int main(int argc, char **argv)
 
         // Trace Count/Compare, TLB and FPU
         model_flags |= 0x0c000020;
+    }
+    if (magic_opcodes) {
+        // Enable magic Pass/Fail opcodes
+        icmAddStringAttr(user_attrs, "IMPERAS_MIPS_AVP_OPCODES", "enable");
     }
 
     // Select processor model from library
@@ -504,6 +513,8 @@ int main(int argc, char **argv)
         icmPrintf("Board: '%s'\n", board);
         if (cache_enable)
             icmPrintf("Cache: enabled\n");
+        if (magic_opcodes)
+            icmPrintf("Magic opcodes: enabled\n");
         if (stop_on_reset)
             icmPrintf("Stop: on software reset\n");
     }

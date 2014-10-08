@@ -1,6 +1,6 @@
-Board 'Microchip Explorer16'.
-Magic opcodes enabled.
-Flash file 'boot-test.hex', 1660 bytes
+Board: 'Microchip Explorer16'
+Magic opcodes: enabled
+Load file: 'boot-test.hex', 1660 bytes
 
 ***** Start 'M4K' *****
 M4K : Write C0STAT       = 00400004
@@ -250,9 +250,9 @@ M4K : 9fc00660 1fc00660 3: 2c00abc2 SLTIU	$0, $0, -21566
 Info (MIPS32_AVP) AVP test PASS
 ***** Stop *****
 
-OVPsim finished: Tue May 27 00:55:29 2014
+OVPsim finished: Wed Oct  8 12:39:10 2014
 
 
-OVPsim (32-Bit) v20140430.0 Open Virtual Platform simulator from www.OVPworld.org.
+OVPsim (32-Bit) v20140731.0 Open Virtual Platform simulator from www.OVPworld.org.
 Visit www.IMPERAS.com for multicore debug, verification and analysis solutions.
 
