@@ -195,10 +195,6 @@ int load_hex (void *progmem, void *bootmem, const char *filename)
             break;
         }
 	bytes = HEX (buf+1);
-        if (bytes & 1) {
-            printf("%s: odd length\n", filename);
-            exit (1);
-        }
 	if (strlen ((char*) buf) < bytes * 2 + 11) {
             printf("%s: too short hex line\n", filename);
             exit (1);
@@ -217,6 +213,7 @@ int load_hex (void *progmem, void *bootmem, const char *filename)
 	sum += record_type + bytes + (address & 0xff) + (address >> 8 & 0xff);
 	if (sum != (unsigned char) - HEX (buf+9 + bytes + bytes)) {
             printf("%s: bad hex checksum\n", filename);
+            printf("Line %s", buf);
             exit (1);
         }
 

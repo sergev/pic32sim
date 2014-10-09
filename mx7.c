@@ -338,6 +338,46 @@ unsigned io_read32 (unsigned address, unsigned *bufp, const char **namep)
     STORAGE (ADC1BUFE); break;
     STORAGE (ADC1BUFF); break;
 
+    /*--------------------------------------
+     * USB registers.
+     */
+    STORAGE (U1OTGIR); break;	// OTG interrupt flags
+    STORAGE (U1OTGIE); break;	// OTG interrupt enable
+    STORAGE (U1OTGSTAT); break;	// Comparator and pin status
+    STORAGE (U1OTGCON); break;	// Resistor and pin control
+    STORAGE (U1PWRC); break;	// Power control
+    STORAGE (U1IR); break;	// Pending interrupt
+    STORAGE (U1IE); break;	// Interrupt enable
+    STORAGE (U1EIR); break;	// Pending error interrupt
+    STORAGE (U1EIE); break;	// Error interrupt enable
+    STORAGE (U1STAT); break;	// Status FIFO
+    STORAGE (U1CON); break;	// Control
+    STORAGE (U1ADDR); break;	// Address
+    STORAGE (U1BDTP1); break;	// Buffer descriptor table pointer 1
+    STORAGE (U1FRML); break;	// Frame counter low
+    STORAGE (U1FRMH); break;	// Frame counter high
+    STORAGE (U1TOK); break;	// Host control
+    STORAGE (U1SOF); break;	// SOF counter
+    STORAGE (U1BDTP2); break;	// Buffer descriptor table pointer 2
+    STORAGE (U1BDTP3); break;	// Buffer descriptor table pointer 3
+    STORAGE (U1CNFG1); break;	// Debug and idle
+    STORAGE (U1EP(0)); break;	// Endpoint control
+    STORAGE (U1EP(1)); break;
+    STORAGE (U1EP(2)); break;
+    STORAGE (U1EP(3)); break;
+    STORAGE (U1EP(4)); break;
+    STORAGE (U1EP(5)); break;
+    STORAGE (U1EP(6)); break;
+    STORAGE (U1EP(7)); break;
+    STORAGE (U1EP(8)); break;
+    STORAGE (U1EP(9)); break;
+    STORAGE (U1EP(10)); break;
+    STORAGE (U1EP(11)); break;
+    STORAGE (U1EP(12)); break;
+    STORAGE (U1EP(13)); break;
+    STORAGE (U1EP(14)); break;
+    STORAGE (U1EP(15)); break;
+
     /*-------------------------------------------------------------------------
      * General purpose IO signals.
      */
@@ -584,6 +624,9 @@ unsigned io_read32 (unsigned address, unsigned *bufp, const char **namep)
     default:
         fprintf (stderr, "--- Read %08x: peripheral register not supported\n",
             address);
+        if (trace_flag)
+            printf ("--- Read %08x: peripheral register not supported\n",
+                address);
         exit (1);
     }
     return *bufp;
@@ -690,6 +733,52 @@ irq:    update_irq_status();
     READONLY(ADC1BUFD);
     READONLY(ADC1BUFE);
     READONLY(ADC1BUFF);
+
+    /*--------------------------------------
+     * USB registers.
+     */
+    STORAGE (U1OTGIR);		// OTG interrupt flags
+        VALUE(U1OTGIR) = 0;
+        return;
+    STORAGE (U1OTGIE); break;	// OTG interrupt enable
+    READONLY(U1OTGSTAT);	// Comparator and pin status
+    STORAGE (U1OTGCON); break;	// Resistor and pin control
+    STORAGE (U1PWRC); break;	// Power control
+    STORAGE (U1IR);             // Pending interrupt
+        VALUE(U1IR) = 0;
+        return;
+    STORAGE (U1IE); break;	// Interrupt enable
+    STORAGE (U1EIR);		// Pending error interrupt
+        VALUE(U1EIR) = 0;
+        return;
+    STORAGE (U1EIE); break;	// Error interrupt enable
+    READONLY(U1STAT);		// Status FIFO
+    STORAGE (U1CON); break;	// Control
+    STORAGE (U1ADDR); break;	// Address
+    STORAGE (U1BDTP1); break;	// Buffer descriptor table pointer 1
+    READONLY(U1FRML);		// Frame counter low
+    READONLY(U1FRMH);		// Frame counter high
+    STORAGE (U1TOK); break;	// Host control
+    STORAGE (U1SOF); break;	// SOF counter
+    STORAGE (U1BDTP2); break;	// Buffer descriptor table pointer 2
+    STORAGE (U1BDTP3); break;	// Buffer descriptor table pointer 3
+    STORAGE (U1CNFG1); break;	// Debug and idle
+    STORAGE (U1EP(0)); break;	// Endpoint control
+    STORAGE (U1EP(1)); break;
+    STORAGE (U1EP(2)); break;
+    STORAGE (U1EP(3)); break;
+    STORAGE (U1EP(4)); break;
+    STORAGE (U1EP(5)); break;
+    STORAGE (U1EP(6)); break;
+    STORAGE (U1EP(7)); break;
+    STORAGE (U1EP(8)); break;
+    STORAGE (U1EP(9)); break;
+    STORAGE (U1EP(10)); break;
+    STORAGE (U1EP(11)); break;
+    STORAGE (U1EP(12)); break;
+    STORAGE (U1EP(13)); break;
+    STORAGE (U1EP(14)); break;
+    STORAGE (U1EP(15)); break;
 
     /*-------------------------------------------------------------------------
      * General purpose IO signals.
@@ -885,10 +974,17 @@ irq:    update_irq_status();
     default:
         fprintf (stderr, "--- Write %08x to %08x: peripheral register not supported\n",
             data, address);
+        if (trace_flag)
+            printf ("--- Write %08x to %08x: peripheral register not supported\n",
+                data, address);
         exit (1);
+
 readonly:
         fprintf (stderr, "--- Write %08x to %s: readonly register\n",
             data, *namep);
+        if (trace_flag)
+            printf ("--- Write %08x to %s: readonly register\n",
+                data, *namep);
         *namep = 0;
         return;
     }

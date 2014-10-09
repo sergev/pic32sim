@@ -144,7 +144,7 @@ static void mem_read (icmProcessorP proc, Addr paddr, Uns32 bytes,
 static void mem_write (icmProcessorP proc, Addr paddr, Uns32 bytes,
     const void *value, void *user_data, Addr vaddr)
 {
-    Uns32 data;
+    Uns32 data = 0;
     const char *name = "???";
 
     if (vaddr >= 0x80000000 && vaddr < IO_MEM_START + 0xa0000000U) {
@@ -153,12 +153,26 @@ static void mem_write (icmProcessorP proc, Addr paddr, Uns32 bytes,
         icmExit(proc);
     }
 
-    if (bytes != 4) {
+    // Fetch data and align to word format.
+    switch (bytes) {
+    case 1:
+        data = *(Uns8*) value;
+        data <<= (paddr & 3) * 8;
+        paddr &= ~3;
+        break;
+    case 2:
+        data = *(Uns16*) value;
+        data <<= (paddr & 2) * 8;
+        paddr &= ~3;
+        break;
+    case 4:
+        data = *(Uns32*) value;
+        break;
+    default:
         icmPrintf("--- I/O Write %08x: incorrect size %u bytes\n",
             (Uns32) paddr, bytes);
         icmExit(proc);
     }
-    data = *(Uns32*) value;
     io_write32 (paddr, (Uns32*) (user_data + (paddr & 0xffffc)),
         data, &name);
     if (trace_flag && name != 0) {
