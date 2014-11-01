@@ -421,7 +421,7 @@ int main(int argc, char **argv)
         // Enable magic Pass/Fail opcodes
         icmAddStringAttr(user_attrs, "IMPERAS_MIPS_AVP_OPCODES", "enable");
     }
-model_flags |= 0x0c000020;
+//model_flags |= 0x08000000; // TLB
 
     // Select processor model from library
     const char *model_file = icmGetVlnvString(NULL,
