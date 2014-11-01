@@ -60,6 +60,7 @@ extern int trace_flag;          // trace enable
 extern int stop_on_reset;       // terminate simulation on software reset
 
 int load_file(void *progmem, void *bootmem, const char *filename);
+void dump_regs(const char *message);
 
 void io_init (void *bootp, unsigned devcfg0, unsigned devcfg1,
     unsigned devcfg2, unsigned devcfg3, unsigned devid, unsigned osccon);

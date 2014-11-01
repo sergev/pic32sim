@@ -85,6 +85,56 @@ static void print_user_attribute (const char *owner, const char *name,
     }
 }
 
+void quit()
+{
+    icmPrintf("***** Stop *****\n");
+    if (trace_flag)
+        fprintf(stderr, "***** Stop *****\n");
+    icmTerminate();
+}
+
+void killed(int sig)
+{
+    icmPrintf("\n***** Killed *****\n");
+    if (trace_flag)
+        fprintf(stderr, "\n***** Killed *****\n");
+    exit(1);
+}
+
+Uns64 read_reg (const char *name)
+{
+    Uns64 value = 0;
+
+    if (! icmReadReg (processor, name, &value)) {
+        fprintf(stderr, "%s: Unable to read register '%s'\n", __func__, name);
+        quit();
+    }
+    return value;
+}
+
+void write_reg (const char *name, Uns64 value)
+{
+    if (! icmWriteReg (processor, name, &value)) {
+        fprintf(stderr, "%s: Unable to write register '%s'\n", __func__, name);
+        quit();
+    }
+}
+
+//
+// Check for MCheck condition.
+//
+static void machine_check()
+{
+    Uns32 cause = read_reg("cause");
+    int exc_code = (cause >> 2) & 31;
+
+    if (exc_code == 24) {
+        // Machine check!
+        dump_regs("MCheck");
+        quit();
+    }
+}
+
 //
 // Callback for reading peripheral registers.
 //
@@ -136,6 +186,7 @@ static void mem_read (icmProcessorP proc, Addr paddr, Uns32 bytes,
             (Uns32) paddr, bytes);
         icmExit(proc);
     }
+    machine_check();
 }
 
 //
@@ -178,6 +229,7 @@ static void mem_write (icmProcessorP proc, Addr paddr, Uns32 bytes,
     if (trace_flag && name != 0) {
         icmPrintf("--- I/O Write %08x to %s \n", data, name);
     }
+    machine_check();
 }
 
 //
@@ -209,22 +261,6 @@ static void pause_idle()
 
     /* Wait for incoming data */
     vtty_wait (&rfds);
-}
-
-void quit()
-{
-    icmPrintf("***** Stop *****\n");
-    if (trace_flag)
-        fprintf(stderr, "***** Stop *****\n");
-    icmTerminate();
-}
-
-void killed(int sig)
-{
-    icmPrintf("\n***** Killed *****\n");
-    if (trace_flag)
-        fprintf(stderr, "\n***** Killed *****\n");
-    exit(1);
 }
 
 //
@@ -304,7 +340,7 @@ int main(int argc, char **argv)
     //
     // Initialize CpuManager
     //
-    icmInit(sim_attrs, remote_debug, 0);
+    icmInitPlatform(ICM_VERSION, sim_attrs, remote_debug, 0, NULL);
     atexit(quit);
 
     // Use ^\ to kill the simulation.
@@ -385,6 +421,7 @@ int main(int argc, char **argv)
         // Enable magic Pass/Fail opcodes
         icmAddStringAttr(user_attrs, "IMPERAS_MIPS_AVP_OPCODES", "enable");
     }
+model_flags |= 0x0c000020;
 
     // Select processor model from library
     const char *model_file = icmGetVlnvString(NULL,
@@ -573,6 +610,7 @@ int main(int argc, char **argv)
 	    if (! uart_active())
 		pause_idle();
 	}
+        machine_check();
 
 	// poll uarts
 	uart_poll();
@@ -613,4 +651,66 @@ void soft_reset()
     if (! icmWriteProcessorMemory (processor, address, &value, 4)) {
         icmPrintf ("--- Cannot write %#x to %#x\n", value, address);
     }
+}
+
+void dump_regs(const char *message)
+{
+    Uns32 pc = icmGetPC(processor);
+    Uns32 status = read_reg ("status");
+    Uns32 cause = read_reg ("cause");
+    Uns32 entryhi = read_reg ("entryhi");
+    Uns32 badvaddr = read_reg ("badvaddr");
+    Uns32 epc = read_reg ("epc");
+    Uns32 hi = read_reg ("hi");
+    Uns32 lo = read_reg ("lo");
+    Uns32 r[32];
+
+    r[1] = read_reg ("at");
+    r[2] = read_reg ("v0");
+    r[3] = read_reg ("v1");
+    r[4] = read_reg ("a0");
+    r[5] = read_reg ("a1");
+    r[6] = read_reg ("a2");
+    r[7] = read_reg ("a3");
+    r[8] = read_reg ("t0");
+    r[9] = read_reg ("t1");
+    r[10] = read_reg ("t2");
+    r[11] = read_reg ("t3");
+    r[12] = read_reg ("t4");
+    r[13] = read_reg ("t5");
+    r[14] = read_reg ("t6");
+    r[15] = read_reg ("t7");
+    r[16] = read_reg ("s0");
+    r[17] = read_reg ("s1");
+    r[18] = read_reg ("s2");
+    r[19] = read_reg ("s3");
+    r[20] = read_reg ("s4");
+    r[21] = read_reg ("s5");
+    r[22] = read_reg ("s6");
+    r[23] = read_reg ("s7");
+    r[24] = read_reg ("t8");
+    r[25] = read_reg ("t9");
+    r[26] = read_reg ("k0");
+    r[27] = read_reg ("k1");
+    r[28] = read_reg ("gp");
+    r[29] = read_reg ("sp");
+    r[30] = read_reg ("s8");
+    r[31] = read_reg ("ra");
+
+    printf ("--%-10s--  t0 = %8x   s0 = %8x   t8 = %8x      lo = %8x\n",
+        message, r[8], r[16], r[24], lo);
+    printf ("at = %8x   t1 = %8x   s1 = %8x   t9 = %8x      hi = %8x\n",
+        r[1], r[9], r[17], r[25], hi);
+    printf ("v0 = %8x   t2 = %8x   s2 = %8x   k0 = %8x  status = %8x\n",
+        r[2], r[10], r[18], r[26], status);
+    printf ("v1 = %8x   t3 = %8x   s3 = %8x   k1 = %8x   cause = %8x\n",
+        r[3], r[11], r[19], r[27], cause);
+    printf ("a0 = %8x   t4 = %8x   s4 = %8x   gp = %8x      pc = %8x\n",
+        r[4], r[12], r[20], r[28], pc);
+    printf ("a1 = %8x   t5 = %8x   s5 = %8x   sp = %8x     epc = %8x\n",
+        r[5], r[13], r[21], r[29], epc);
+    printf ("a2 = %8x   t6 = %8x   s6 = %8x   fp = %8x   badva = %8x\n",
+        r[6], r[14], r[22], r[30], badvaddr);
+    printf ("a3 = %8x   t7 = %8x   s7 = %8x   ra = %8x entryhi = %8x\n",
+        r[7], r[15], r[23], r[31], entryhi);
 }

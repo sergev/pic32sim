@@ -71,20 +71,24 @@ static void update_irq_status()
             int n = irq >> 5;
 
             if (((VALUE(IFS(n)) & VALUE(IEC(n))) >> (irq & 31)) & 1) {
+//printf ("-- irq %u is pending\n", irq);
                 /* Interrupt is pending. */
-                int level = VALUE(IPC(n >> 2));
-                level >>= 2 + (n & 3) * 8;
+                int level = VALUE(IPC(irq >> 2));
+                level >>= 2 + (irq & 3) * 8;
                 level &= 7;
                 if (level > cause_ripl) {
-                    vector = n;
+                    vector = irq;
                     cause_ripl = level;
                 }
             }
         }
         VALUE(INTSTAT) = vector | (cause_ripl << 8);
-//printf ("-- vector = %d, level = %d\n", vector, level);
+//printf ("-- vector = %d, level = %d\n", vector, cause_ripl);
     }
 //else printf ("-- no irq pending\n");
+
+//printf ("   IFS=%08x %08x %08x %08x %08x %08x\n", VALUE(IFS0), VALUE(IFS1), VALUE(IFS2), VALUE(IFS3), VALUE(IFS4), VALUE(IFS5));
+//printf ("   IEC=%08x %08x %08x %08x %08x %08x\n", VALUE(IEC0), VALUE(IEC1), VALUE(IEC2), VALUE(IEC3), VALUE(IEC4), VALUE(IEC5));
 
     eic_level_vector (cause_ripl, vector);
 }
@@ -423,8 +427,14 @@ unsigned io_read32 (unsigned address, unsigned *bufp, const char **namep)
     STORAGE (PORTG); break;     // Port G: read inputs
     STORAGE (LATG); break;      // Port G: read outputs
     STORAGE (ODCG); break;      // Port G: open drain configuration
-    STORAGE (CNPUG); break;     // Input pin pull-up
-    STORAGE (CNPDG); break;     // Input pin pull-down
+    STORAGE (CNPUG);            // Input pin pull-up
+        // Enter critical region
+        dump_regs("Enter");
+        break;
+    STORAGE (CNPDG);            // Input pin pull-down
+        // Exit critical region
+        dump_regs("Exit");
+        break;
     STORAGE (CNCONG); break;    // Interrupt-on-change control
     STORAGE (CNENG); break;     // Input change interrupt enable
     STORAGE (CNSTATG); break;   // Input change status

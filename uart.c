@@ -21,6 +21,7 @@
  * arising out of or in connection with the use or performance of
  * this software.
  */
+#include <stdio.h>
 #include "globals.h"
 
 #ifdef PIC32MX7
@@ -137,6 +138,7 @@ void uart_poll()
 	}
 	if ((VALUE(uart_sta[unit]) & PIC32_USTA_UTXEN) && uart_oactive[unit]) {
 	    /* Activate transmit interrupt. */
+//printf("uart%u: raise tx irq %u\n", unit, uart_irq[unit] + UART_IRQ_TX);
 	    irq_raise (uart_irq[unit] + UART_IRQ_TX);
 	}
     	uart_oactive[unit] = 0;
