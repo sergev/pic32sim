@@ -605,6 +605,10 @@ int main(int argc, char **argv)
         stop_reason = icmSimulate(processor, chunk);
 	if (stop_reason == ICM_SR_HALT) {
 	    /* Suspended on WAIT instruction. */
+	    if (! (read_reg ("status") & 1)) {
+	        /* Interrupts disabled - halt simulation. */
+	        break;
+            }
 	    stop_reason = ICM_SR_SCHED;
 
 	    if (! uart_active())

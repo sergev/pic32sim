@@ -85,25 +85,27 @@ static void read_data (int fd, unsigned offset,
     /* Fill uninitialized blocks by FF: simulate real flash media. */
     memset (buf, 0xFF, blen);
 
-    if (lseek (fd, offset, 0) != offset) {
-        printf ("sdcard: seek failed, offset %#x\n", offset);
+    if (pread (fd, buf, blen, offset) != blen) {
+        printf ("sdcard: pread failed, offset %#x\n", offset);
         return;
     }
-    if (read (fd, buf, blen) < 0) {
-        printf ("sdcard: read failed, offset %#x\n", offset);
-        return;
+#if 0
+    printf ("(%#x)\n", offset);
+    int i, k;
+    for (i=0; i<blen; i+=32) {
+        for (k=0; k<32; k++) {
+            printf (" %02x", buf[i+k]);
+        }
+        printf ("\n");
     }
+#endif
 }
 
 static void write_data (int fd, unsigned offset,
     unsigned char *buf, unsigned blen)
 {
-    if (lseek (fd, offset, 0) != offset) {
-        printf ("sdcard: seek failed, offset %#x\n", offset);
-        return;
-    }
-    if (write (fd, buf, blen) != blen) {
-        printf ("sdcard: write failed, offset %#x\n", offset);
+    if (pwrite (fd, buf, blen, offset) != blen) {
+        printf ("sdcard: pwrite failed, offset %#x\n", offset);
         return;
     }
 }
@@ -162,11 +164,11 @@ void sdcard_select (int unit, int on)
     sdcard_t *d = &sdcard[unit];
 
     if (on) {
-        TRACE ("sdcard%d: (((\n", unit);
+        TRACE ("sdcard%d: +++\n", unit);
         d->select = 1;
         d->count = 0;
     } else {
-        TRACE ("sdcard%d: )))\n", unit);
+        TRACE ("sdcard%d: ---\n", unit);
         d->select = 0;
     }
 }
@@ -281,7 +283,7 @@ unsigned sdcard_io (unsigned data)
                 reply = 0;
                 d->offset = d->buf[1] << 24 | d->buf[2] << 16 |
                     d->buf[3] << 8 | d->buf[4];
-                TRACE ("sdcard%d: read offset %#x, length %u kbytes\n",
+                TRACE ("sdcard%d: read offset %#x, length %u bytes\n",
                     d->unit, d->offset, d->blen);
                 d->limit = d->blen + 3;
                 d->count = 1;
@@ -302,7 +304,7 @@ unsigned sdcard_io (unsigned data)
                 d->read_multiple = 1;
                 d->offset = d->buf[1] << 24 | d->buf[2] << 16 |
                     d->buf[3] << 8 | d->buf[4];
-                TRACE ("sdcard%d: read offset %#x, length %u kbytes\n",
+                TRACE ("sdcard%d: read offset %#x, length %u bytes\n",
                     d->unit, d->offset, d->blen);
                 d->limit = d->blen + 3;
                 d->count = 1;
@@ -330,7 +332,7 @@ unsigned sdcard_io (unsigned data)
                     d->offset = d->buf[1] << 24 | d->buf[2] << 16 |
                         d->buf[3] << 8 | d->buf[4];
                     write_data (d->fd, d->offset, &d->buf[8], d->blen);
-                    TRACE ("sdcard%d: write data, length %u kbytes\n", d->unit, d->blen);
+                    TRACE ("sdcard%d: write data, length %u bytes\n", d->unit, d->blen);
                 } else {
                     /* Reject data */
                     reply = 4;
@@ -359,7 +361,7 @@ unsigned sdcard_io (unsigned data)
                 /* Accept data */
                 reply = 0x05;
                 write_data (d->fd, d->offset, &d->buf[1], d->blen);
-                TRACE ("sdcard%d: write sector %u, length %u kbytes\n",
+                TRACE ("sdcard%d: write sector %u, length %u bytes\n",
                     d->unit, d->offset / 512, d->blen);
                 d->offset += 512;
                 d->count = 0;
