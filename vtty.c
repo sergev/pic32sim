@@ -29,6 +29,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <unistd.h>
+#include <fcntl.h>
 #include <errno.h>
 #include <termios.h>
 #include <pthread.h>
@@ -146,9 +147,15 @@ static void vtty_term_reset (void)
 /*
  * Initialize real TTY
  */
-static void vtty_term_init (void)
+static int vtty_term_init (void)
 {
-    tcgetattr (STDIN_FILENO, &tios);
+    int fd = open ("/dev/tty", O_RDWR);
+    if (fd < 0) {
+        perror ("/dev/tty");
+        exit(-1);
+    }
+
+    tcgetattr (fd, &tios);
 
     memcpy (&tios_orig, &tios, sizeof (struct termios));
     atexit (vtty_term_reset);
@@ -164,8 +171,10 @@ static void vtty_term_init (void)
 
     tios.c_lflag &= ~(ICANON | ECHO);
     tios.c_iflag &= ~ICRNL;
-    tcsetattr (STDIN_FILENO, TCSANOW, &tios);
-    tcflush (STDIN_FILENO, TCIFLUSH);
+    tcsetattr (fd, TCSANOW, &tios);
+    tcflush (fd, TCIFLUSH);
+
+    return fd;
 }
 
 /*
@@ -278,8 +287,7 @@ void vtty_create (unsigned unit, char *name, int tcp_port)
     vtty->input_state = VTTY_INPUT_TEXT;
 
     if (tcp_port == 0) {
-        vtty_term_init ();
-        vtty->fd = STDIN_FILENO;
+        vtty->fd = vtty_term_init();
         vtty->select_fd = &vtty->fd;
         vtty->fstream = stdout;
     } else {
@@ -397,8 +405,8 @@ static int vtty_tcp_read (vtty_t * vtty)
 static int vtty_read (vtty_t * vtty)
 {
     if (vtty->tcp_port)
-        return (vtty_tcp_read (vtty));
-    return (vtty_term_read (vtty));
+        return vtty_tcp_read (vtty);
+    return vtty_term_read (vtty);
 }
 
 /*
@@ -620,7 +628,8 @@ void vtty_put_char (unsigned unit, char ch)
                 vtty->name, (unsigned char) ch, strerror (errno));
         }
     } else if (vtty->fstream) {
-        fwrite (&ch, 1, 1, vtty->fstream);
+        if (write (vtty->fd, &ch, 1) != 1)
+            perror ("write");
     } else {
         fprintf (stderr, "uart%u: not configured\n", unit+1);
     }
