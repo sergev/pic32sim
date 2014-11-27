@@ -1338,7 +1338,7 @@ void io_reset()
      */
     VALUE(ANSELA) = 0xFFFF;		// Port A: analog select
     VALUE(TRISA) = 0xFFFF;		// Port A: mask of inputs
-    VALUE(PORTA) = 0xFFFF;		// Port A: read inputs, write outputs
+    VALUE(PORTA) = 0xFFCF;		// Port A: read inputs, write outputs
     VALUE(LATA)  = 0xFFFF;		// Port A: read/write outputs
     VALUE(ODCA)  = 0;			// Port A: open drain configuration
     VALUE(CNPUA) = 0;			// Input pin pull-up
