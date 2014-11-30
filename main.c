@@ -244,6 +244,27 @@ void timer_irq (void *arg, Uns32 value)
         irq_clear (0);
 }
 
+//
+// Callbacks for software interrupts.
+//
+void soft_irq0 (void *arg, Uns32 value)
+{
+    //icmPrintf("--- soft interrupt 0: %u\n", value);
+    if (value)
+        irq_raise (1);
+    else
+        irq_clear (1);
+}
+
+void soft_irq1 (void *arg, Uns32 value)
+{
+    //icmPrintf("--- soft interrupt 1: %u\n", value);
+    if (value)
+        irq_raise (2);
+    else
+        irq_clear (2);
+}
+
 /*
  * When uarts are idle, insert uspeep()
  * to decrease the cpu load.
@@ -460,6 +481,14 @@ int main(int argc, char **argv)
     icmNetP ti_output = icmNewNet ("causeTI");
     icmConnectProcessorNet (processor, ti_output, "causeTI", ICM_OUTPUT);
     icmAddNetCallback (ti_output, timer_irq, NULL);
+
+    // Callbacks for software interrupts,
+    icmNetP swi0_output = icmNewNet ("causeIP0");
+    icmNetP swi1_output = icmNewNet ("causeIP1");
+    icmConnectProcessorNet (processor, swi0_output, "causeIP0", ICM_OUTPUT);
+    icmConnectProcessorNet (processor, swi1_output, "causeIP1", ICM_OUTPUT);
+    icmAddNetCallback (swi0_output, soft_irq0, NULL);
+    icmAddNetCallback (swi1_output, soft_irq1, NULL);
 
     // Data memory.
     icmMapNativeMemory (bus, ICM_PRIV_RWX, DATA_MEM_START,
