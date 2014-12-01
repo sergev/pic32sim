@@ -240,8 +240,6 @@ void timer_irq (void *arg, Uns32 value)
     //icmPrintf("--- timer interrupt: %u\n", value);
     if (value)
         irq_raise (0);
-    else
-        irq_clear (0);
 }
 
 //
@@ -252,8 +250,6 @@ void soft_irq0 (void *arg, Uns32 value)
     //icmPrintf("--- soft interrupt 0: %u\n", value);
     if (value)
         irq_raise (1);
-    else
-        irq_clear (1);
 }
 
 void soft_irq1 (void *arg, Uns32 value)
@@ -261,8 +257,6 @@ void soft_irq1 (void *arg, Uns32 value)
     //icmPrintf("--- soft interrupt 1: %u\n", value);
     if (value)
         irq_raise (2);
-    else
-        irq_clear (2);
 }
 
 /*

@@ -46,11 +46,17 @@ static unsigned uart_irq[NUM_UART] = {  // UART interrupt numbers
     PIC32_IRQ_U6E,
 };
 static int uart_oactive[NUM_UART];      // UART output active
+static int uart_odelay[NUM_UART];       // UART output delay count
 static unsigned uart_sta[NUM_UART] =    // UxSTA address
     { U1STA, U2STA, U3STA, U4STA, U5STA, U6STA };
 static unsigned uart_mode[NUM_UART] =    // UxMODE address
     { U1MODE, U2MODE, U3MODE, U4MODE, U5MODE, U6MODE };
 
+#define OUTPUT_DELAY 3
+
+/*
+ * Read of UxRXREG register.
+ */
 unsigned uart_get_char (int unit)
 {
     unsigned value;
@@ -68,6 +74,9 @@ unsigned uart_get_char (int unit)
     return value;
 }
 
+/*
+ * Called before reading a value of UxBRG, U1MODE or U1STA registers.
+ */
 void uart_poll_status (int unit)
 {
     // Keep receiver idle, transmit shift register always empty
@@ -80,6 +89,9 @@ void uart_poll_status (int unit)
     //printf ("<%x>", VALUE(uart_sta[unit])); fflush (stdout);
 }
 
+/*
+ * Write to UxTXREG register.
+ */
 void uart_put_char (int unit, unsigned data)
 {
     vtty_put_char (unit, data);
@@ -88,10 +100,14 @@ void uart_put_char (int unit, unsigned data)
         ! uart_oactive[unit])
     {
         uart_oactive[unit] = 1;
-        //irq_raise (uart_irq[unit] + UART_IRQ_TX);
+        uart_odelay[unit] = 0;
+        VALUE(uart_sta[unit]) |= PIC32_USTA_UTXBF;
     }
 }
 
+/*
+ * Write to UxMODE register.
+ */
 void uart_update_mode (int unit)
 {
     if (! (VALUE(uart_mode[unit]) & PIC32_UMODE_ON)) {
@@ -103,6 +119,9 @@ void uart_update_mode (int unit)
     }
 }
 
+/*
+ * Write to UxSTA register.
+ */
 void uart_update_status (int unit)
 {
     if (! (VALUE(uart_sta[unit]) & PIC32_USTA_URXEN)) {
@@ -123,7 +142,9 @@ void uart_poll()
 
     for (unit=0; unit<NUM_UART; unit++) {
 	if (! (VALUE(uart_mode[unit]) & PIC32_UMODE_ON)) {
+	    /* UART disabled. */
     	    uart_oactive[unit] = 0;
+            VALUE(uart_sta[unit]) &= ~PIC32_USTA_UTXBF;
 	    continue;
 	}
 
@@ -136,12 +157,21 @@ void uart_poll()
 	    irq_raise (uart_irq[unit] + UART_IRQ_RX);
 	    continue;
 	}
-	if ((VALUE(uart_sta[unit]) & PIC32_USTA_UTXEN) && uart_oactive[unit]) {
+
+	if (! (VALUE(uart_sta[unit]) & PIC32_USTA_UTXEN)) {
+	    /* Transmitter disabled. */
+            uart_oactive[unit] = 0;
+            continue;
+        }
+	if (uart_oactive[unit]) {
 	    /* Activate transmit interrupt. */
+	    if (++uart_odelay[unit] > OUTPUT_DELAY) {
 //printf("uart%u: raise tx irq %u\n", unit, uart_irq[unit] + UART_IRQ_TX);
-	    irq_raise (uart_irq[unit] + UART_IRQ_TX);
+                irq_raise (uart_irq[unit] + UART_IRQ_TX);
+                VALUE(uart_sta[unit]) &= ~PIC32_USTA_UTXBF;
+                uart_oactive[unit] = 0;
+            }
 	}
-    	uart_oactive[unit] = 0;
     }
 }
 
