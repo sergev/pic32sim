@@ -539,6 +539,11 @@ int main(int argc, char **argv)
     sdcard_spi_port = 2;                        // SD card at SPI3,
     cs0_port = 2; cs0_pin = 3;                  // select0 at C3,
     cs1_port = -1; cs1_pin = -1;                // select1 not available
+#elif defined MEBII
+    board = "Microchip MEB-II";
+    sdcard_spi_port = 1;                        // SD card at SPI2,
+    cs0_port = 1; cs0_pin = 14;                 // select0 at B14,
+    cs1_port = -1; cs1_pin = -1;                // select1 not available
 #else
 #error Unknown board type.
 #endif
@@ -548,9 +553,9 @@ int main(int argc, char **argv)
     //
     // Create console port.
     //
-#if defined(EXPLORER16) && defined(PIC32MX7)
+#if defined EXPLORER16 && defined PIC32MX7
     vtty_create (1, "uart2", 0);                // console on UART2
-#elif defined(WIFIRE)
+#elif defined WIFIRE
     vtty_create (3, "uart4", 0);                // console on UART4
 #else
     vtty_create (0, "uart1", 0);                // console on UART1
@@ -565,7 +570,7 @@ int main(int argc, char **argv)
     io_init (bootmem,
         0xffffff7f, 0x5bfd6aff,                 // DEVCFG0, DEVCFG1,
         0xd979f8f9, 0xffff0722,                 // DEVCFG2, DEVCFG3 values
-        0x04307053,                             // DEVID: 795F512L
+        0x04307053,                             // DEVID: MX795F512L
         0x01453320);                            // OSCCON: external oscillator 8MHz
 #elif defined WIFIRE
     // WiFire board.
@@ -573,6 +578,13 @@ int main(int argc, char **argv)
         0xfffffff7, 0x7f743cb9,                 // DEVCFG0, DEVCFG1,
         0xfff9b11a, 0xbeffffff,                 // DEVCFG2, DEVCFG3 values
         0x4510e053,                             // DEVID: MZ2048ECG100 rev A4
+        0x00001120);                            // OSCCON: external oscillator 24MHz
+#elif defined MEBII
+    // MEB-II board.
+    io_init (bootmem,
+        0x7fffffdb, 0x0000fc81,                 // DEVCFG0, DEVCFG1,
+        0x3ff8b11a, 0x86ffffff,                 // DEVCFG2, DEVCFG3 values
+        0x45127053,                             // DEVID: MZ2048ECH144 rev A4
         0x00001120);                            // OSCCON: external oscillator 24MHz
 #else
     // Generic MZ: use data from Explorer16 board.

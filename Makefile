@@ -23,9 +23,11 @@ OBJ_MZ		= obj-mz/mz.o
 #	MAXIMITE   - Maximite Computer
 #	MAX32      - chipKIT Max32
 #	WIFIRE     - chipKIT WiFire
+#	MEBII      - Microchip MEB-II
 #
 CFLAGS_MX7      += -DEXPLORER16
-CFLAGS_MZ       += -DWIFIRE
+#CFLAGS_MZ       += -DWIFIRE
+CFLAGS_MZ       += -DMEBII
 
 #
 # Common options
