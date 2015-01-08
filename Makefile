@@ -6,69 +6,86 @@ IMPERAS_ERROR   := $(error "Please source 'imperas.environ' to setup Imperas env
 endif
 
 #
-# Processor: PIC32 MX7
+# Processors supported:
+#       PIC32 MX7
+#       PIC32 MZ
 #
-CFLAGS_MX7      = -DPIC32MX7
-OBJ_MX7		= obj-mx7/mx7.o
-
-#
-# Processor: PIC32 MZ
-#
-CFLAGS_MZ       = -DPIC32MZ
-OBJ_MZ		= obj-mz/mz.o
+ifeq ($(CPU),mx7)
+    DEFINES     = -DPIC32MX7
+endif
+ifeq ($(CPU),mz)
+    DEFINES     = -DPIC32MZ
+endif
 
 #
 # Board types supported:
-#	EXPLORER16 - Microchip Explorer16
-#	MAXIMITE   - Maximite Computer
-#	MAX32      - chipKIT Max32
-#	WIFIRE     - chipKIT WiFire
-#	MEBII      - Microchip MEB-II
+#	Microchip Explorer16
+#	Maximite Computer
+#	chipKIT Max32
+#	chipKIT WiFire
+#	Microchip MEB-II
 #
-CFLAGS_MX7      += -DEXPLORER16
-#CFLAGS_MZ       += -DWIFIRE
-CFLAGS_MZ       += -DMEBII
+ifeq ($(BOARD),explorer16)
+    DEFINES     += -DEXPLORER16
+endif
+ifeq ($(BOARD),maximite)
+    DEFINES     += -DMAXIMITE
+endif
+ifeq ($(BOARD),max32)
+    DEFINES     += -DMAX32
+endif
+ifeq ($(BOARD),wifire)
+    DEFINES     += -DWIFIRE
+endif
+ifeq ($(BOARD),meb2)
+    DEFINES     += -DMEBII
+endif
 
 #
 # Common options
 #
+OBJLIST		= loadhex.o main.o sdcard.o spi.o uart.o vtty.o
 OPTIMIZE        = -O2
-OBJ		= loadhex.o main.o sdcard.o spi.o uart.o vtty.o
-OBJ_MX7		+= $(addprefix obj-mx7/,$(OBJ))
-OBJ_MZ		+= $(addprefix obj-mz/,$(OBJ))
+OBJDIR          = obj-$(CPU)-$(BOARD)
+OBJ             = $(OBJDIR)/$(CPU).o \
+                  $(addprefix $(OBJDIR)/,$(OBJLIST))
 
-CFLAGS          = -m32 -g -Wall -Werror $(OPTIMIZE) \
+CFLAGS          = -m32 -g -Wall -Werror $(OPTIMIZE) $(DEFINES) \
                   -I$(IMPERAS_HOME)/ImpPublic/include/common \
                   -I$(IMPERAS_HOME)/ImpPublic/include/host \
                   -I$(IMPERAS_HOME)/ImpProprietary/include/host
 
-LDFLAGS         = -L$(IMPERAS_HOME)/bin/$(IMPERAS_ARCH) -lRuntimeLoader \
-                  -lpthread
+LDFLAGS         = -m32
+LIBS            = -L$(IMPERAS_HOME)/bin/$(IMPERAS_ARCH) \
+                  -lRuntimeLoader -lpthread
 
-all:		pic32mx7 pic32mz
+ifeq ($(CPU),)
+all:
+		$(MAKE) CPU=mx7 BOARD=explorer16
+		$(MAKE) CPU=mx7 BOARD=max32
+		$(MAKE) CPU=mx7 BOARD=maximite
+		$(MAKE) CPU=mz BOARD=explorer16
+		$(MAKE) CPU=mz BOARD=wifire
+		$(MAKE) CPU=mz BOARD=meb2
+else
+all:            pic32$(CPU)-$(BOARD)
+endif
 
-pic32mx7:       $(OBJ_MX7)
-		$(CC) -m32 -o $@ $^ $(LDFLAGS)
+pic32$(CPU)-$(BOARD): $(OBJ)
+		$(CC) $(LDFLAGS) $(OBJ) $(LIBS) -o $@
 
-pic32mz:        $(OBJ_MZ)
-		$(CC) -m32 -o $@ $^ $(LDFLAGS)
-
-obj-mx7/%.o:    %.c
+$(OBJDIR)/%.o:  %.c
 		@mkdir -p $(@D)
-		$(CC) -c -o $@ $< $(CFLAGS) $(CFLAGS_MX7)
-
-obj-mz/%.o:     %.c
-		@mkdir -p $(@D)
-		$(CC) -c -o $@ $< $(CFLAGS) $(CFLAGS_MZ)
+		$(CC) $(CFLAGS) -c $< -o $@
 
 clean:
-		rm -rf *.o *~ obj-mx7 obj-mz
+		rm -rf *.o *~ obj-* pic32mx7-* pic32mz-*
 ###
-obj-mx7/loadhex.o obj-mz/loadhex.o: loadhex.c globals.h
-obj-mx7/main.o obj-mz/main.o: main.c globals.h
-obj-mx7/mx7.o: mx7.c globals.h pic32mx.h
-obj-mz/mz.o: mz.c globals.h pic32mz.h
-obj-mx7/sdcard.o obj-mz/sdcard.o: sdcard.c globals.h
-obj-mx7/spi.o obj-mz/spi.o: spi.c globals.h pic32mx.h pic32mz.h
-obj-mx7/uart.o obj-mz/uart.o: uart.c globals.h pic32mx.h pic32mz.h
-obj-mx7/vtty.o obj-mz/vtty.o: vtty.c globals.h
+$(OBJDIR)/loadhex.o: loadhex.c globals.h
+$(OBJDIR)/main.o: main.c globals.h
+$(OBJDIR)/mx7.o: mx7.c globals.h pic32mx.h
+$(OBJDIR)/mz.o: mz.c globals.h pic32mz.h
+$(OBJDIR)/sdcard.o: sdcard.c globals.h
+$(OBJDIR)/spi.o: spi.c globals.h pic32mx.h pic32mz.h
+$(OBJDIR)/uart.o: uart.c globals.h pic32mx.h pic32mz.h
+$(OBJDIR)/vtty.o: vtty.c globals.h

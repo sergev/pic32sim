@@ -1,4 +1,12 @@
-pic32mx7
-pic32mz
-obj-mx7
-obj-mz
+obj-mx7-explorer16
+obj-mx7-max32
+obj-mx7-maximite
+obj-mz-explorer16
+obj-mz-meb2
+obj-mz-wifire
+pic32mx7-explorer16
+pic32mx7-max32
+pic32mx7-maximite
+pic32mz-explorer16
+pic32mz-meb2
+pic32mz-wifire
