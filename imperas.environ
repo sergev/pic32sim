@@ -5,7 +5,7 @@ unset IMPERAS_VLNV
 unset IMPERASD_LICENSE_FILE
 unset MIPS_LICENSE_FILE
 unset LM_LICENSE_FILE
-export IMPERAS_HOME=/usr/local/Imperas.20140731
+export IMPERAS_HOME=/usr/local/Imperas.20141103
 export IMPERAS_RUNTIME=OVPsim
 export IMPERAS_ARCH=Linux32
 export IMPERAS_UNAME=Linux

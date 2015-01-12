@@ -260,7 +260,7 @@ void soft_irq1 (void *arg, Uns32 value)
 }
 
 /*
- * When uarts are idle, insert uspeep()
+ * When uarts are idle, insert usleep()
  * to decrease the cpu load.
  */
 static void pause_idle()

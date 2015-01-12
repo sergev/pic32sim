@@ -10,16 +10,16 @@ How to build and run
  1) Register at ovpworld.org.
     Link: http://www.ovpworld.org/forum/profile.php?mode=register
 
- 2) Download OVPsim simulator package for Linux, release 20140731.0:
-    http://www.ovpworld.org/dlp/?action=dl&dl_id=17886&site=dlp.OVPworld.org
+ 2) Download OVPsim simulator package for Linux, release 20141103.0:
+    http://www.ovpworld.org/dlp/?action=dl&dl_id=21193&site=dlp.OVPworld.org
 
     In case you use different relase of OVPsim, you will need to modify
     file imperas.environ appropriately.
 
  3) Unpack the downloaded package:
-    OVPsim.20140731.0.Linux32.exe
+    OVPsim.20141103.0.Linux32.exe
 
-    Install the unpacked directory as: /usr/local/Imperas.20140731
+    Install the unpacked directory as: /usr/local/Imperas.20141103
     You can install it to some other place, and modify file
     imperas.environ to use a new path.
 
@@ -45,30 +45,29 @@ How to build and run
 
         $ make
 
-    It will create two binaries:
+    It will create six binaries:
 
-        pic32mx7 - MX7 processor on Microchip Explorer16 board
-        pic32mz  - MZ processor on chipKIT WiFire board
-
-    You can modify Makefile and change the type of simulated board
-    to one of:
-
-	EXPLORER16 - Microchip Explorer16
-	MAXIMITE   - Maximite Computer
-	MAX32      - chipKIT Max32
-	WIFIRE     - chipKIT WiFire
+        pic32mx7-explorer16 - MX7 processor on Microchip Explorer16 board
+        pic32mx7-max32      - MX7 processor on chipKIT Max32 board
+        pic32mx7-maximite   - MX7 processor on Maximite board
+        pic32mz-explorer16  - MZ processor on Microchip Explorer16 board
+        pic32mz-meb2        - MZ processor on Microchip MEB-II board
+        pic32mz-wifire      - MZ processor on chipKIT WiFire board
 
  9) Run the simulator without arguments to get a usage hint:
 
-        $ ./pic32mx7
+        $ ./pic32mx7-max32
         Simulator of PIC32MX7 microcontroller
         Usage:
-            pic32mx7 [options] [boot.hex] application.hex
+            pic32mx7-max32 [options] [boot.hex] application.hex
         Options:
             -v           verbose mode
             -t filename  trace CPU instructions and registers
+            -l number    limit simulation to this number of instructions
             -d sd0.img   SD card image (repeat for sd1)
+            -g           wait for GDB connection
             -m           enable magic opcodes
+            -s           stop on software reset
             -c           enable cache
 
 10) Run demos in directories demo/boot, demo/wifire and demo/retrobsd.
