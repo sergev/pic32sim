@@ -1,0 +1,30 @@
+
+File boot-max32-orig.hex contains an original chipKIT bootloader image,
+as downloaded from web page:
+http://www.digilentinc.com/Products/Detail.cfm?Prod=CHIPKIT-MAX32
+
+At startup, the bootloader pauses for a few seconds, waiting for
+any input from UART port. This causes an extra startup delay on
+simulator. To reduce the delay, the bootloader image has been patched
+by adding two instruction words, which override the time limiting constant.
+File boot-max32.hex contains the fixed image.
+
+Original code:
+    9fc00ac0: 3c020006      lui	v0,0x6
+    9fc00ac4: 34421a80      ori	v0,v0,0x1a80
+
+Code after fix:
+    9fc00ac0: 3c020000      lui	v0,0x0
+    9fc00ac4: 34420001      ori	v0,v0,0x0001
+
+The patch has been generated using genhex utility:
+    genhex -v 0x1fc00ac0 0x3c020000
+    genhex -v 0x1fc00ac4 0x34420001
+
+--- Address = 1fc00ac0, value = 3c020000
+:020000041fc01b
+:040ac0000000023cf4
+
+--- Address = 1fc00ac4, value = 34420001
+:020000041fc01b
+:040ac40001004234b7
